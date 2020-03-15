@@ -1,6 +1,8 @@
 """Contains abstract base for all nodes"""
-from abc import ABC, abstractmethod
-
-class Node(ABC):
+from simulation.network import Frame
+class Node:
     """Device/collection of devices, that could communicate via network."""
-    pass
+
+    def receive(self, frame: Frame):
+        """Receives frame passed to device."""
+        pass
