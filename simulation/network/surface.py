@@ -1,7 +1,7 @@
 """Class describes surface on which frames are modving."""
 from typing import List
 from functools import partial
-from simulation.network import TileType, Tile
+from simulation.network import TileType, Tile, Slot, Wall
 
 
 class Surface:
@@ -18,7 +18,7 @@ class Surface:
     """
 
     def __init__(self, map: List[List[int]]):
-        self.enrty_points, self.surface = self.from_map(map)
+        self.entry_points, self.surface = self.from_map(map)
 
     def wrap_surface(self, surface: List[List[int]]) -> None:
         """
@@ -28,12 +28,12 @@ class Surface:
         """
         cols = len(surface[0])
         rows = len(surface)
-        surface.insert(0, [TileType.WALL.value] * cols)
-        surface.append([TileType.WALL.value]*cols)
+        surface.insert(0, [Wall()] * cols)
+        surface.append([Wall()] * cols)
 
         def wrap_row(row):
-            row.insert(0, TileType.WALL.value)
-            row.append(TileType.WALL.value)
+            row.insert(0, Wall())
+            row.append(Wall())
 
         return list(map(wrap_row, surface))
 
@@ -46,26 +46,27 @@ class Surface:
         """
         def map_row(element, entry_points):
             """Perform row mapping to tile and save entry points."""
-            tile = Tile(TileType(element))
-            if TileType(element) is TileType.SLOT:
+            tile = Tile.from_int(element)
+            if isinstance(tile, Slot):
                 entry_points.append(tile)
             return tile
 
         entry_points = []
-        self.wrap_surface(surface)
         surface = [list(map(partial(map_row, entry_points=entry_points), row))
                    for row in surface]
+        self.wrap_surface(surface)
+
         surface = self.assign_neingbors(surface)
         return entry_points, surface
 
     def assign_neingbors(self, surface: List[List[Tile]]) -> List[Tile]:
         """Bind each tile with it's left, right, upper and lower neinghbor."""
 
-        for i, row in enumerate(surface[1:-1]):
-            for j, tile in enumerate(row[1:-1]):
+        for i, row in enumerate(surface[1:-1], start=1):
+            for j, tile in enumerate(row[1:-1], start=1):
                 up = surface[i-1][j]
                 bottom = surface[i+1][j]
                 left = surface[i][j-1]
                 right = surface[i][j+1]
-                tile.neignhbors = [up, bottom, left, right]
+                tile.neinghbors = [up, bottom, left, right]
         return surface

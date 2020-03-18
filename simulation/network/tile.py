@@ -4,6 +4,7 @@ from typing import List, TypeVar, Dict
 from enum import Enum, auto
 from simulation.network import Frame
 from simulation.nodes import Node
+# Means that content could be frame or node
 Content = TypeVar('Content', Frame, Node)
 
 
@@ -20,38 +21,110 @@ class TileState(Enum):
     NOT_EMPTY = auto()
 
 
-class Tile:
+class Tile(ABC):
     """Describes the most basic empty element  of `Surface`."""
+    tile_types = {}
+    tiles_created = 0
+    # TODO Move assigment to Network
+    frames_passed = 0
 
-    def __init__(self, tile_type: TileType):
+    def __init__(self):
         """
         On create all tiles are empty because they still hadn't received.
         nothing, and there no devices connected to them.
-        :param tile_type: - type of `Tile`, describes it's logic. 
         """
-        self.type = tile_type
-        self.__state: TileState = TileState.EMPTY
-        self.__content: Content = None
+        Tile.tiles_created += 1
+        self.id = Tile.tiles_created
+        self.last_received_frame_id = -1
+        self._content: Content = None
         self.neinghbors = []
+
+    def assign_frame_id(self, frame: Frame) -> int:
+        """
+        Assigns frame id, to frame so it could be identified on `Tile` level
+        :param frame: - unregistered Frame
+        :return: - assigned id
+        """
+        Tile.frames_passed += 1
+        frame.frame_id = Tile.frames_passed
+        return Tile.frames_passed
 
     @property
     def content(self):
-        return self.__content
+        return self._content
 
     @content.setter
-    def content(self, val: Content):
-        if self.__state is TileState.EMPTY:
-            self.__state = TileState.NOT_EMPTY
-            self.__content = val
-        else:
-            print("Collision !!!!")
+    def content(self, frame: Frame):
+        if frame.frame_id is None:
+            self.assign_frame_id(frame)
+        self.last_received_frame_id = frame.frame_id
+        self._content = frame
+
+    @staticmethod
+    def from_int(tile_as_int: int, **kwargs):
+        """
+        Creates new Tile from int if int is a valid type.
+        :param `tile_as_int` - integer representation of tile.
+        :return: - newly created corresponding to this integer
+        """
+        if tile_as_int not in Tile.tile_types.keys():
+            raise ValueError(f"{tile_as_int} not a valid tile type")
+        return Tile.tile_types[tile_as_int](**kwargs)
 
     def propagate(self) -> None:
-        """Propagate frame content on surface."""
-        for tile in self.__neinghbors:
-            tile.receive(self.content)
-        self.__state = TileState.EMPTY
+        """
+        Propagate frame content on surface.
+        :param `trace` - tiles, already visited by this frame
+        """
+        for tile in self.neinghbors:
+            if self.content.frame_id != tile.last_received_frame_id:
+                tile.receive(self.content)
+        self._state = TileState.EMPTY
 
-    def receive(self, val: Frame) -> None:
-        """Receive a frame and set's it as a Tile content."""
+    def __init_subclass__(cls):
+        if 'tile_type' not in vars(cls):
+            raise AttributeError(
+                f"No static 'tile_type' field implemented in '{cls.__name__}'")
+        Tile.tile_types[cls.tile_type.value] = cls
+
+    @abstractmethod
+    def receive(self, val: Frame, from_tile) -> None:
+        """Decribe what should happend with Frame after tile will receive it"""
+        raise NotImplementedError
+
+    def __repr__(self):
+        return str.lower(self.__class__.__name__)
+
+
+class Slot(Tile):
+    """
+    Type of `Tile` to which device can be assigned.
+    """
+    tile_type = TileType.SLOT
+
+    def __init__(self):
+        super().__init__()
+
+    def receive(self, val: Frame):
+        print(f"Received {val}")
+
+
+class Wall(Tile):
+    """
+    Type of Tile from which Frame can't pass
+    """
+    tile_type = TileType.WALL
+
+    def receive(self, val: Frame):
+        pass
+
+
+class Empty(Tile):
+    """
+    Type of tile where nothing can't happend.
+    """
+    tile_type = TileType.EMPTY
+
+    def receive(self, val):
         self.content = val
+        self.propagate()
