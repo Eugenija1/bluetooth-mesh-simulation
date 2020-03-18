@@ -58,7 +58,7 @@ class Tile:
         else:
             print("Collision !!!!")
 
-    def propagate(self, targets: List[Tile]) -> None:
+    def propagate(self, targets: List['Tile']) -> None:
         """Propagate frame content on surface."""
         for target in targets:
             target.receive(self.content)
