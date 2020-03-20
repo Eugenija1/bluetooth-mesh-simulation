@@ -1,14 +1,15 @@
 import numpy as np
-import self as self
+
 
 
 class FileManager:
-    def to_matrix(self):
-        f = open ( 'file.txt' , 'r')
-        l = []
-        l = np.array([ line.split() for line in f])
-        print (l)
-
-FileManager.to_matrix(self)
+    @staticmethod
+    def to_matrix():
+        with open('file.txt', 'r') as f:
 
 
+            l = np.array([ line.split() for line in f])
+            print (l)
+
+
+FileManager.to_matrix()
