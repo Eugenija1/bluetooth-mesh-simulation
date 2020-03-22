@@ -1,11 +1,9 @@
-import tkinter as tk
-from tkinter import filedialog
 from kivy.core.window import Window
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import Screen, ScreenManager, FadeTransition
+from kivy.uix.relativelayout import RelativeLayout
+from kivy.uix.filechooser import FileChooserIconView
 from kivy.app import App
 from kivy.lang import Builder
-from kivy.uix.button import Button
-
 
 Window.size = (1024, 640)
 
@@ -14,38 +12,37 @@ class MainWindow(Screen):
     pass
 
 
-class WelcomeWindow(Screen):
+class ScreenFileChooser(Screen):
+    def __init__(self, **kwargs):
+        super(ScreenFileChooser, self).__init__(**kwargs)
+        # filter added. Since windows will throw error on sys files
+        self.fclv = FileChooserIconView(filters=[lambda folder, filename: not filename.endswith('.sys')])
+        self.add_widget(self.fclv)
+
+
+class WelcomePanel(RelativeLayout):
     pass
 
 
-class WindowManager(ScreenManager):
+class ConfigPanel(RelativeLayout):
     pass
 
 
-class PathButton(Button):
-    @staticmethod
-    def get_path():
-        root = tk.Tk()
-        root.withdraw()
-        return filedialog.askopenfilename()
-
-
-class PathWindow(Screen):
-    pass
-
-
-kv = Builder.load_file("my.kv")
-sm = WindowManager()
-screens = [WelcomeWindow(name="welcome"), MainWindow(name="main")]
-for screen in screens:
-    sm.add_widget(screen)
-
-sm.current = "welcome"
+kv = Builder.load_file("C:\\Users\\Berezka\\programming\\symulacja\\bluetooth-mesh-simulation\\simulation\\GUI\\my.kv")
+sm = ScreenManager()
+sm.add_widget(MainWindow(name='main'))
+sm.add_widget(ScreenFileChooser(name='chooser'))
 
 
 class MyMainApp(App):
     def build(self):
         return sm
+
+    def open_chooser(self):
+        print("switch screens")
+        sm.transition.duration = 1
+        sm.transition = FadeTransition()
+        sm.current = 'chooser'
 
 
 if __name__ == "__main__":

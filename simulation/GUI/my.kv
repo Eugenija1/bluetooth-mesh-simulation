@@ -1,45 +1,34 @@
 <MainWindow>:
-    GridLayout:
-        cols:2
+    BoxLayout:
+        cols: 2
         TabbedPanel:
-            pos_hint: {'center_x': .5, 'center_y': .5}
+            size_hint: (.7, 1)
             do_default_tab: False
+            tab_width: self.width / 2 #tabs fill entire width of TabbedPanel
             TabbedPanelItem:
-                text: 'tab1'
-                Label:
-                    text: 'place for map'
+                text: 'Map'
+                WelcomePanel:
             TabbedPanelItem:
                 text: 'tab2'
                 Label:
                     text: '??? place for house ???'
-        Label:
-            size_hint_x: .35
-            text: 'config'
+        ConfigPanel:
 
 
+<WelcomePanel@RelativeLayout>:
+    Label:
+        pos_hint: {'center_x': 0.5, 'center_y': 0.55}
+        text: 'Welcome to application! \n To start simulation upload map'
+        halign: 'center'
+        font_size: 18
+    Button:
+        size_hint: .3, .1
+        pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+        text: 'upload'
+        font_size: 18
+        on_release: app.open_chooser()
 
-<WelcomeWindow>:
-    name: "welcome"
-
-    FloatLayout:
-        cols:1
-
-        Label:
-            text: "Welcome to application!\n To start simulation upload map"
-            pos_hint:{"center_x":0.5,"center_y":0.6}
-
-        PathButton:
-            pos_hint:{"center_x":0.5,"center_y":0.4}
-            size_hint: 0.4, 0.1
-            font_size: (root.width**2 + root.height**2) / 17**4
-            text: "upload map"
-            on_press: label.text = self.get_path()
-
-        Button:
-            pos_hint:{"center_x":0.5,"center_y":0.2}
-            size_hint: 0.4, 0.1
-            font_size: (root.width**2 + root.height**2) / 17**4
-            text: "next screen"
-            on_release:
-                app.root.current = "main"
-                root.manager.transition.direction = "down"
+<ConfigPanel@RelativeLayout>:
+    size_hint: .3, 1
+    Label:
+        text: 'config'
