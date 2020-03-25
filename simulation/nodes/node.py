@@ -8,7 +8,6 @@ class Node:
     def __init__(self, id):
         self.id = id
 
-        
     def receive(self, frame: Frame):
         """Receives frame passed to device."""
         pass

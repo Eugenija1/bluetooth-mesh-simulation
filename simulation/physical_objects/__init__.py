@@ -1,1 +1,0 @@
-from simulation.physical_objects.environment import Environment

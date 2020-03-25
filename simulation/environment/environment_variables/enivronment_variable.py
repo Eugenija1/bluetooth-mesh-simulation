@@ -15,14 +15,13 @@ class EnvironmentVariable(ABC):
     existing_variables = {}
 
     def __init__(self):
-        """Add empty observer list to newly created environmental variable."""
+        """Create observer list where this varible observers will be placed."""
         self.observers = []
 
     @property
     @abstractmethod
     def value(self):
         """Value of some Environment param."""
-        raise NotImplementedError
 
     def notify_all(self) -> None:
         """Notify all tracking `Nodes`, about value change.
@@ -42,5 +41,4 @@ class EnvironmentVariable(ABC):
 
     def __init_subclass__(cls):
         """Register all existing environment variables"""
-        EnvironmentVariable.existing_variables[cls.__name__] = cls
-    
+        EnvironmentVariable.existing_variables[str.lower(cls.__name__)] = cls

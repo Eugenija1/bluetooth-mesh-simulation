@@ -1,0 +1,1 @@
+"""Module contains implementation of tabs."""

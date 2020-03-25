@@ -1,5 +1,5 @@
 """Example implementation of `EnvironmentVariable`"""
-from simulation.environment import EnvironmentVariable
+from simulation.environment.environment_variables import EnvironmentVariable
 
 
 class Temperature(EnvironmentVariable):

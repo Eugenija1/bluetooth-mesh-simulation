@@ -82,10 +82,7 @@ class Tile(ABC):
         self._state = TileState.EMPTY
 
     def __init_subclass__(cls):
-        if 'tile_type' not in vars(cls):
-            raise AttributeError(
-                f"No static 'tile_type' field implemented in '{cls.__name__}'")
-        Tile.tile_types[cls.tile_type.value] = cls
+        Tile.tile_types[TileType[str.upper(cls.__name__)].value] = cls
 
     @abstractmethod
     def receive(self, val: Frame, from_tile) -> None:
@@ -100,8 +97,6 @@ class Slot(Tile):
     """
     Type of `Tile` to which device can be assigned.
     """
-    tile_type = TileType.SLOT
-
     def __init__(self):
         super().__init__()
 
@@ -113,8 +108,6 @@ class Wall(Tile):
     """
     Type of Tile from which Frame can't pass
     """
-    tile_type = TileType.WALL
-
     def receive(self, val: Frame):
         pass
 
@@ -123,8 +116,6 @@ class Empty(Tile):
     """
     Type of tile where nothing can't happend.
     """
-    tile_type = TileType.EMPTY
-
     def receive(self, val):
         self.content = val
         self.propagate()

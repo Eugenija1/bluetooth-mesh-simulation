@@ -11,4 +11,4 @@ class Frame:
 
 
     def __str__(self):
-        return f"Frame from {self.source_id} to {self.dest_id}"
+        return f"Going from {self.source_id} to {self.dest_id}"
