@@ -1,15 +1,9 @@
-import numpy as np
-
-
-
 class FileManager:
+    """Provides common operations on files"""
     @staticmethod
-    def to_matrix():
-        with open('file.txt', 'r') as f:
-
-
-            l = np.array([ line.split() for line in f])
-            print (l)
-
-
-FileManager.to_matrix()
+    def parse(filename):
+        """Read from filename and parse it as int 2d array."""
+        with open(filename, 'r') as file:
+            parsed_surface = [
+                map(int, set(list(line)) - {'\n'}) for line in file]
+        return parsed_surface
