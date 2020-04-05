@@ -45,6 +45,7 @@ class Network:
 
     def transmit(self, frame: Frame, frequency: int):
         """Send frame given as argument."""
+        print(self._entry_points)
         distance = self._calculate_distance(frame.source_id, frame.dest_id)
         path_loss = self._calculate_path_loss(frequency, distance, 1)
         print(

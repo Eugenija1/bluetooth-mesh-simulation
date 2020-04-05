@@ -49,17 +49,6 @@ class Tile(ABC):
         frame.frame_id = Tile.frames_passed
         return Tile.frames_passed
 
-    @property
-    def content(self):
-        return self._content
-
-    @content.setter
-    def content(self, frame: Frame):
-        if frame.frame_id is None:
-            self.assign_frame_id(frame)
-        self.last_received_frame_id = frame.frame_id
-        self._content = frame
-
     @staticmethod
     def from_int(tile_as_int: int, **kwargs):
         """
@@ -117,8 +106,8 @@ class Slot(Tile):
         :param frame: received frame
         :param path_loss: calculated path_loss
         """
+        print(f"Received frame {frame} with path loss: {path_loss}")
         self.content.receive(frame)
-        print(f"Received {frame}")
 
 
 class Wall(Tile):

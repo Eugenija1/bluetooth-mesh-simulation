@@ -3,7 +3,7 @@ from simulation.network import Frame
 
 
 class Node:
-    """Device/collection of devices, that could communicate via network.""
+    """Device/collection of devices, that could communicate via network."""
     count = 0
 
     def __init__(self, elements):
@@ -12,7 +12,8 @@ class Node:
 
     def receive(self, frame: Frame):
         """Receives frame passed to device."""
-        print(f"Received {frame}")
+        print(f"Node received frame {frame}")
 
     def set_id(self):
-        return Node.count + 1
+        Node.count += 1
+        return Node.count
