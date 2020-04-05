@@ -5,9 +5,10 @@ from simulation.network import Frame
 class Node:
     """Device/collection of devices, that could communicate via network."""
 
-    def __init__(self, id):
+    def __init__(self, elements):
         self.id = id
+        self.elements = elements
 
     def receive(self, frame: Frame):
         """Receives frame passed to device."""
-        pass
+        print(f"Received {frame}")

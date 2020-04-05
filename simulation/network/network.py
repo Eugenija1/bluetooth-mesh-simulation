@@ -30,10 +30,7 @@ class Network:
     def __init__(self, map: List[List[int]]):
         self._surface = Surface(map)
         self._route_table = {}
-        self._devices = {
-            'device1': self._surface.entry_points[0],
-            'device2': self._surface.entry_points[2]
-        }
+        self._entry_points = {}
 
     def register_node(self, node: Node, slot: int):
         """
@@ -42,7 +39,8 @@ class Network:
         :param `node`: - that represents this node.
         :param `slot`: - id of slot on surface, where this node will be assigned
         """
-        self._devices[node.id] = self._surface.entry_points[slot]
+        self._entry_points[node.id] = self._surface.entry_points[slot]
+        self._entry_points[node.id].assign_node(node)
         print(f"Device was succesfully registered on slot {slot}")
 
     def transmit(self, frame: Frame, frequency: int):
@@ -51,12 +49,13 @@ class Network:
         path_loss = self._calculate_path_loss(frequency, distance, 1)
         print(
             f"Transmitting frame: {str(frame)} on distance {distance} meters with path loss {path_loss}")
+        self._entry_points[frame.dest_id].receive(frame, path_loss)
 
     def _calculate_distance(self, from_node: 'device id', to_node: 'device id'):
         """
         Calculates distance between two nodes, based on data in _device_entry_points.
         """
-        route = (self._devices[from_node], self._devices[to_node])
+        route = (self._entry_points[from_node], self._entry_points[to_node])
         distance = [self._route_table.setdefault(
             route_perm, None) for route_perm in permutations(route)]
         if not any(distance):

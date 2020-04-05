@@ -16,4 +16,6 @@ class Temperature(EnvironmentVariable):
         self.__degrees = val
         self.notify_all()
 
+    def affect(self, element):
+        pass
 
