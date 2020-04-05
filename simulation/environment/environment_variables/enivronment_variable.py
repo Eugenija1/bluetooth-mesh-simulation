@@ -20,6 +20,7 @@ class EnvironmentVariable(ABC):
     @abstractmethod
     def affect(self, element):
         """
+        Describes reaction of this environment variable on device reaction
         """
         pass
 
@@ -34,7 +35,7 @@ class EnvironmentVariable(ABC):
         When value of environment variable change in some way - it should
         tell all devices in simulation that tracks it, that such change event
         occured, so they can do some actions to handle it.
-        This method doing that by calling notify method on every of his subsribers
+        This method doing that by calling notify method on every of his subscribers
         and passing there new it's value.
         """
         for element in self.observers:

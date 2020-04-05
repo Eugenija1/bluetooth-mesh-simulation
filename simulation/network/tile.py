@@ -97,17 +97,35 @@ class Slot(Tile):
     """
     Type of `Tile` to which device can be assigned.
     """
+
     def __init__(self):
         super().__init__()
+        self.content = None
 
-    def receive(self, val: Frame):
-        print(f"Received {val}")
+    def assign_node(self, node: Node):
+        """
+        Assign new node to this slot.
+
+        :param node: new node to assign
+        """
+        self.content = node
+
+    def receive(self, frame: Frame, path_loss: float) -> None:
+        """
+        Check if frame could be received with given path_loss.
+
+        :param frame: received frame
+        :param path_loss: calculated path_loss
+        """
+        self.content.receive(frame)
+        print(f"Received {frame}")
 
 
 class Wall(Tile):
     """
     Type of Tile from which Frame can't pass
     """
+
     def receive(self, val: Frame):
         pass
 
@@ -116,6 +134,7 @@ class Empty(Tile):
     """
     Type of tile where nothing can't happend.
     """
+
     def receive(self, val):
         self.content = val
         self.propagate()
