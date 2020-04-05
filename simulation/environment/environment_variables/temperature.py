@@ -15,3 +15,5 @@ class Temperature(EnvironmentVariable):
     def value(self, val):
         self.__degrees = val
         self.notify_all()
+
+

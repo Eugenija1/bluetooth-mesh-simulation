@@ -1,6 +1,5 @@
 """Contain base class for physical environment characteeristics."""
 from abc import ABC, abstractmethod
-# from simulation.nodes import Node
 
 
 class EnvironmentVariable(ABC):
@@ -41,7 +40,7 @@ class EnvironmentVariable(ABC):
         for element in self.observers:
             element.notify(self.value)
 
-    def addTracker(self, tracker: 'Node') -> None:
+    def addObserver(self, tracker: 'Node') -> None:
         """Add device that will track environment value to observers list."""
         self.observers.append(tracker)
 

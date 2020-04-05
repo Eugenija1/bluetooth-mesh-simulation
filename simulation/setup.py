@@ -1,4 +1,6 @@
 from simulation.network import Network, Frame
+from simulation.nodes import Node
+from simulation.nodes.elements import TemperatureTracker, Element
 from typing import List
 
 
@@ -8,12 +10,17 @@ class Simulation:
 
     def set_slot(self, slot_id, elements: List[Element]):
         node = Node(elements)
-        self._network.register_node(node, slot_id) 
+        self._network.register_node(node, slot_id)
         return self._network
+
 
 def run(surface):
     network = Network(surface)
-    environment = Environment()
+    # environment = Environment()
+    sim = Simulation(surface)
+    elements = [TemperatureTracker()]
+    sim.set_slot(1, elements)
+
     print("Surface looks like")
     for row in network._surface._surface:
         print(row)

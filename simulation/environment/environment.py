@@ -17,3 +17,4 @@ class Environment:
         self.variables = {}
         for env_variable, var_creator in EnvironmentVariable.existing_variables.items():
             self.variables[env_variable] = var_creator()
+        
