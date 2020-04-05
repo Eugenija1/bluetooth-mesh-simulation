@@ -18,6 +18,12 @@ class EnvironmentVariable(ABC):
         """Create observer list where this varible observers will be placed."""
         self.observers = []
 
+    @abstractmethod
+    def affect(self, element):
+        """
+        """
+        pass
+
     @property
     @abstractmethod
     def value(self):
@@ -32,10 +38,10 @@ class EnvironmentVariable(ABC):
         This method doing that by calling notify method on every of his subsribers
         and passing there new it's value.
         """
-        for node in self.observers:
-            node.notify(self.value)
+        for element in self.observers:
+            element.notify(self.value)
 
-    def track(self, tracker: 'Node') -> None:
+    def addTracker(self, tracker: 'Node') -> None:
         """Add device that will track environment value to observers list."""
         self.observers.append(tracker)
 

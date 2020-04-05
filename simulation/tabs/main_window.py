@@ -22,7 +22,7 @@ class MainWindow(Screen):
         int_surface = FileManager.parse(filename[0])
         obj_surf = Surface(int_surface)
         text = ""
-        for line in obj_surf.surface:
+        for line in obj_surf._surface:
             text += "".join([str(elem) + "  " for elem in line])
             text += "\n"
         self.map_area.text = text

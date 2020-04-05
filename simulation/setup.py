@@ -1,8 +1,19 @@
 from simulation.network import Network, Frame
+from typing import List
 
+
+class Simulation:
+    def __init__(self, surface):
+        self._network = surface
+
+    def set_slot(self, slot_id, elements: List[Element]):
+        node = Node(elements)
+        self._network.register_node(node, slot_id) 
+        return self._network
 
 def run(surface):
     network = Network(surface)
+    environment = Environment()
     print("Surface looks like")
     for row in network._surface._surface:
         print(row)
